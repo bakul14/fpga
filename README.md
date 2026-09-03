@@ -3,6 +3,7 @@
 ### На Mac OS (протестировано на Mac OS 27 beta 6)
 ```zsh
 xcode-select --install
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 brew trust --formula chipsalliance/verible/verible
 brew install --HEAD randomplum/gtkwave/gtkwave
 brew install verilator verible cmake clang-format googletest coreutils
@@ -24,7 +25,8 @@ wget -qO- https://github.com/chipsalliance/verible/releases/download/v0.0-4163-g
 ```
 
 ## Форматирование кода
-В VS Code ставим расширения **Verilog-HDL/SystemVerilog** от Masahiro Hiramori и **Clang-Format** от Xaver Hellauer. Теперь форматировать код на Verilog и C++ можно комбинацией клавиш `Shift+Option+F` на Mac OS и `Ctrl+Shift+I` на Linux.
+
+В [VS Code](https://code.visualstudio.com/download?_exp_download=fb315fc982) ставим расширения **Verilog-HDL/SystemVerilog** от Masahiro Hiramori и **Clang-Format** от Xaver Hellauer. Теперь форматировать код на Verilog и C++ можно комбинацией клавиш `Shift+Option+F` на Mac OS и `Ctrl+Shift+I` на Linux.
 
 ## Компиляция модуля, тестов и запуск для нужного семинара
 ```bash
