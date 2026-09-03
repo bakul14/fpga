@@ -2,9 +2,9 @@
 
 ### На Mac OS (протестировано на Mac OS 27 beta 6)
 ```zsh
-   xcode-select --install
-   brew trust --formula chipsalliance/verible/verible
-   brew install verilator gtkwave verible cmake clang-format googletest coreutils
+xcode-select --install
+brew trust --formula chipsalliance/verible/verible
+brew install verilator gtkwave verible cmake clang-format googletest coreutils
 ```
 
 ### На Linux (протестировано на Ubuntu 22.04)
@@ -22,14 +22,17 @@ sudo make install
 wget -qO- https://github.com/chipsalliance/verible/releases/download/v0.0-4163-g6cce8f19/verible-v0.0-4163-g6cce8f19-linux-static-x86_64.tar.gz | sudo tar -xz --strip-components=2 -C /usr/local/bin
 ```
 
-В VS Code ставим расширение **Verilog-HDL/SystemVerilog** от Masahiro Hiramori. Теперь форматировать код на C++ и Verilog можно комбинацией клавиш `Shift+Option+F` на Mac OS и `Ctrl+Shift+I` на Linux.
+## Форматирование кода:
+В VS Code ставим расширения **Verilog-HDL/SystemVerilog** от Masahiro Hiramori и **Clang-Format** от Xaver Hellauer. Теперь форматировать код на Verilog и C++ можно комбинацией клавиш `Shift+Option+F` на Mac OS и `Ctrl+Shift+I` на Linux.
 
-## Собрать и прогнать тесты нужного семинара:
+## Компиляция модуля, тестов и запуск их для нужного семинара:
 ```bash
 make task_1
 ```
 
-## Каждый тест пишет свою временную диаграмму, посмотреть её можно так:
+## Просмотр с помощью gtkview:
 ```bash
-gtkwave build/task_1/wave_increments_on_every_clock.vcd
+make view
 ```
+
+Если не нравится `gtkview` из-за слишком мелкого интерфейса, то в VSCode можно установить расширение **WaveTrace** для просмотра `.vcd`-файлов и использовать его вместо `gtkview`.

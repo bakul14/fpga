@@ -5,5 +5,8 @@
 	cmake --build build/$@ -j$$(nproc)
 	cd build/$@ && ./$@
 
+view:
+	cd build && gtkwave
+
 clean:
 	rm -rf build
