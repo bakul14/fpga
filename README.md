@@ -22,6 +22,7 @@ autoconf
 make -j$(nproc)
 sudo make install
 wget -qO- https://github.com/chipsalliance/verible/releases/download/v0.0-4163-g6cce8f19/verible-v0.0-4163-g6cce8f19-linux-static-x86_64.tar.gz | sudo tar -xz --strip-components=2 -C /usr/local/bin
+cd -
 ```
 
 ## Форматирование кода
