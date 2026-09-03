@@ -4,7 +4,8 @@
 ```zsh
 xcode-select --install
 brew trust --formula chipsalliance/verible/verible
-brew install verilator gtkwave verible cmake clang-format googletest coreutils
+brew install --HEAD randomplum/gtkwave/gtkwave
+brew install verilator verible cmake clang-format googletest coreutils
 ```
 
 ### На Linux (протестировано на Ubuntu 22.04)
@@ -22,15 +23,20 @@ sudo make install
 wget -qO- https://github.com/chipsalliance/verible/releases/download/v0.0-4163-g6cce8f19/verible-v0.0-4163-g6cce8f19-linux-static-x86_64.tar.gz | sudo tar -xz --strip-components=2 -C /usr/local/bin
 ```
 
-## Форматирование кода:
+## Форматирование кода
 В VS Code ставим расширения **Verilog-HDL/SystemVerilog** от Masahiro Hiramori и **Clang-Format** от Xaver Hellauer. Теперь форматировать код на Verilog и C++ можно комбинацией клавиш `Shift+Option+F` на Mac OS и `Ctrl+Shift+I` на Linux.
 
-## Компиляция модуля, тестов и запуск их для нужного семинара:
+## Компиляция модуля, тестов и запуск для нужного семинара
 ```bash
 make task_1
 ```
+> [!IMPORTANT]
+> Одна задача включает набор .v-файлов логики на Verilog и .cpp-файлов модульных тестов на C++.
+> Каждая задача располагается в отдельной папке, обязательно начинающейся с `task_`.
+> Повторений названий не должно быть, так как cmake будет искать папку задачи рекурсивно внутри папок `semester_*/`.
+> Примеры названий: `task_0`, `task_1`, `task_dz`, `task_67`.
 
-## Просмотр с помощью gtkview:
+## Просмотр с помощью gtkview
 ```bash
 make view
 ```
