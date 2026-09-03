@@ -1,0 +1,10 @@
+{
+  "verilog.formatting.verilogHDL.formatter": "verible-verilog-format",
+  "verilog.formatting.systemVerilog.formatter": "verible-verilog-format",
+  "[verilog]": {
+    "editor.defaultFormatter": "mshr-h.veriloghdl"
+  },
+  "[systemverilog]": {
+    "editor.defaultFormatter": "mshr-h.veriloghdl"
+  }
+}
