@@ -1,0 +1,16 @@
+{
+  "languages": {
+    "SystemVerilog": {
+      "formatter": {
+        "external": {
+          "command": "verible-verilog-format",
+          "arguments": [
+            "--flagfile",
+            ".verible-format.flags",
+            "-"
+          ]
+        }
+      }
+    }
+  }
+}

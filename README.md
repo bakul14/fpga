@@ -29,6 +29,8 @@ cd -
 
 В [VS Code](https://code.visualstudio.com/download?_exp_download=fb315fc982) ставим расширения **Verilog-HDL/SystemVerilog** от Masahiro Hiramori и **Clang-Format** от Xaver Hellauer. Теперь форматировать код на Verilog и C++ можно комбинацией клавиш `Shift+Option+F` на Mac OS и `Ctrl+Shift+I` на Linux.
 
+В [Zed](https://zed.dev/download) ставим расширение **Verilog** от someone13574, C++ поддерживается из коробки. Теперь форматировать код можно комбинацией клавиш `Command+Shift+I` на Mac OS и `Ctrl+Shift+I` на Linux.
+
 ## Компиляция модуля, тестов и запуск нужной задачи
 ```bash
 make task_1
