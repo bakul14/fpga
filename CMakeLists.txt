@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 
+if(POLICY CMP0144)
+  cmake_policy(SET CMP0144 NEW)
+endif()
+
 file(GLOB TASK_DIR ${CMAKE_SOURCE_DIR}/semester_*/*/${TASK})
 
 if(NOT TASK OR NOT TASK_DIR)
