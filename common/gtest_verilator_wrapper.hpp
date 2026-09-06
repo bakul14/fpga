@@ -12,7 +12,7 @@
 constexpr int k_trace_levels = 1;
 
 template <typename Model>
-class VerilatorWrapperTest : public ::testing::Test
+class VerilatorWrapperTestBase : public ::testing::Test
 {
 protected:
   void SetUp() override
@@ -25,25 +25,48 @@ protected:
     reset_();
   }
 
-  void TearDown() override { trace_->close(); }
-
-  void tick_(const size_t cycles = 1)
+  void TearDown() override
   {
-    for (size_t i = 0; i < cycles; ++i) {
-      dut_->clk = 0;
-      dut_->eval();
-      trace_->dump(sim_time_++);
-
-      dut_->clk = 1;
-      dut_->eval();
-      trace_->dump(sim_time_++);
-    }
+    dut_->final();
+    trace_->close();
   }
+
+  void dump_() { trace_->dump(sim_time_++); }
 
   virtual void reset_() {}
 
+protected:
   const std::unique_ptr<VerilatedContext> context_ = std::make_unique<VerilatedContext>();
   const std::unique_ptr<Model> dut_                = std::make_unique<Model>(context_.get());
   const std::unique_ptr<VerilatedVcdC> trace_      = std::make_unique<VerilatedVcdC>();
   uint64_t sim_time_                               = 0U;
+};
+
+template <typename Model>
+class SyncVerilatorWrapperTest : public VerilatorWrapperTestBase<Model>
+{
+protected:
+  void tick_(const size_t cycles = 1)
+  {
+    for (size_t i = 0; i < cycles; ++i) {
+      this->dut_->clk = 0;
+      this->dut_->eval();
+      this->dump_();
+
+      this->dut_->clk = 1;
+      this->dut_->eval();
+      this->dump_();
+    }
+  }
+};
+
+template <typename Model>
+class AsyncVerilatorWrapperTest : public VerilatorWrapperTestBase<Model>
+{
+protected:
+  void step_()
+  {
+    this->dut_->eval();
+    this->dump_();
+  }
 };

@@ -15,7 +15,7 @@ constexpr uint32_t k_period        = k_max_count + 1U;
 constexpr uint32_t k_partial_count = 5U;
 constexpr uint32_t k_reset_cycles  = 3U;
 
-class CounterTest : public VerilatorWrapperTest<Vcounter>
+class CounterTest : public SyncVerilatorWrapperTest<Vcounter>
 {
 protected:
   void reset_() override
