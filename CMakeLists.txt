@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.20)
 
 if(POLICY CMP0144)
   cmake_policy(SET CMP0144 NEW)
@@ -12,12 +12,25 @@ endif()
 
 project(iu4_fpga CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(verilator REQUIRED HINTS $ENV{VERILATOR_ROOT})
-find_package(GTest REQUIRED)
+
+include(FetchContent)
+
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG v1.18.0
+    GIT_SHALLOW TRUE
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/.deps/googletest-src
+    SUBBUILD_DIR ${CMAKE_SOURCE_DIR}/.deps/googletest-subbuild
+    BINARY_DIR ${CMAKE_BINARY_DIR}/_deps/googletest-build
+)
+
+FetchContent_MakeAvailable(googletest)
 
 file(GLOB_RECURSE CPP_SOURCES ${TASK_DIR}/*.cpp)
 file(GLOB_RECURSE VERILOG_SOURCES ${TASK_DIR}/*.v)

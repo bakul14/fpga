@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "mshr-h.veriloghdl",
+    "xaver.clang-format",
+    "llvm-vs-code-extensions.vscode-clangd",
+    "wavetrace.wavetrace"
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.cpptools"
+  ]
+}

@@ -1,4 +1,4 @@
-.PHONY: clean
+.PHONY: clean distclean
 
 %:
 	cmake -B build/$@ -DTASK=$@
@@ -10,3 +10,7 @@ view:
 
 clean:
 	rm -rf build
+
+distclean: clean
+	rm -rf .deps
+	rm -f semester_*/*/task_*/.clangd
