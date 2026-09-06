@@ -27,9 +27,9 @@ protected:
 
   void TearDown() override { trace_->close(); }
 
-  void tick_(const int cycles = 1)
+  void tick_(const size_t cycles = 1)
   {
-    for (int i = 0; i < cycles; ++i) {
+    for (size_t i = 0; i < cycles; ++i) {
       dut_->clk = 0;
       dut_->eval();
       trace_->dump(sim_time_++);
