@@ -34,4 +34,7 @@ verilate(${TASK}
     SOURCES ${VERILOG_SOURCES}
 )
 
-file(WRITE ${TASK_DIR}/.clangd "CompileFlags:\n  CompilationDatabase: ${CMAKE_BINARY_DIR}\n")
+file(WRITE ${TASK_DIR}/.clangd "\
+CompileFlags:
+  CompilationDatabase: ${CMAKE_BINARY_DIR}
+")
