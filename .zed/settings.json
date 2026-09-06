@@ -11,6 +11,16 @@
           ]
         }
       }
+    },
+    "C++": {
+      "formatter": {
+        "external": {
+          "command": "clang-format",
+          "arguments": [
+            "--assume-filename={buffer_path}"
+          ]
+        }
+      }
     }
   }
 }

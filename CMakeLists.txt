@@ -14,6 +14,7 @@ project(iu4_fpga CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(verilator REQUIRED HINTS $ENV{VERILATOR_ROOT})
 find_package(GTest REQUIRED)
@@ -32,3 +33,5 @@ verilate(${TASK}
     VERILATOR_ARGS -Wall
     SOURCES ${VERILOG_SOURCES}
 )
+
+file(WRITE ${TASK_DIR}/.clangd "CompileFlags:\n  CompilationDatabase: ${CMAKE_BINARY_DIR}\n")
