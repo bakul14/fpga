@@ -4,7 +4,7 @@
 
 #include "Vshader.h"
 
-class ShaderTest : public VerilatorWrapperTest<Vshader>
+class ShaderTest : public SyncVerilatorWrapperTest<Vshader>
 {
 public:
   void reset_() override
@@ -32,23 +32,20 @@ TEST_F(ShaderTest, check_shading_when_requested)
 {
   dut_->turn_request = 1;
 
-  tick_();
-  EXPECT_EQ(dut_->out0, 1);
-  EXPECT_EQ(dut_->out1, 0);
-  EXPECT_EQ(dut_->out2, 0);
+  for (int i = 0; i < 3; i++) {
+    tick_();
+    EXPECT_EQ(dut_->out0, 1);
+    EXPECT_EQ(dut_->out1, 0);
+    EXPECT_EQ(dut_->out2, 0);
 
-  tick_();
-  EXPECT_EQ(dut_->out0, 0);
-  EXPECT_EQ(dut_->out1, 1);
-  EXPECT_EQ(dut_->out2, 0);
+    tick_();
+    EXPECT_EQ(dut_->out0, 0);
+    EXPECT_EQ(dut_->out1, 1);
+    EXPECT_EQ(dut_->out2, 0);
 
-  tick_();
-  EXPECT_EQ(dut_->out0, 0);
-  EXPECT_EQ(dut_->out1, 0);
-  EXPECT_EQ(dut_->out2, 1);
-
-  tick_();
-  EXPECT_EQ(dut_->out0, 0);
-  EXPECT_EQ(dut_->out1, 0);
-  EXPECT_EQ(dut_->out2, 0);
+    tick_();
+    EXPECT_EQ(dut_->out0, 0);
+    EXPECT_EQ(dut_->out1, 0);
+    EXPECT_EQ(dut_->out2, 1);
+  }
 }

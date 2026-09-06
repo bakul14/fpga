@@ -12,7 +12,7 @@ module shader (
 
     if (turn_request) begin
       state <= state + 1;
-      if (state >= 3) state <= 0;
+      if (state >= 3) state <= 1;
     end
 
   end
