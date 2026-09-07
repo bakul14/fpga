@@ -35,6 +35,8 @@ protected:
 
   virtual void reset_() {}
 
+  virtual void tick_(const size_t cycles = 1) = 0;
+
 protected:
   const std::unique_ptr<VerilatedContext> context_ = std::make_unique<VerilatedContext>();
   const std::unique_ptr<Model> dut_                = std::make_unique<Model>(context_.get());
@@ -46,14 +48,14 @@ template <typename Model>
 class SyncVerilatorWrapperTest : public VerilatorWrapperTestBase<Model>
 {
 protected:
-  void tick_(const size_t cycles = 1)
+  void tick_(const size_t cycles = 1) final override
   {
     for (size_t i = 0; i < cycles; ++i) {
-      this->dut_->clk = 0;
+      this->dut_->clk = 1;
       this->dut_->eval();
       this->dump_();
 
-      this->dut_->clk = 1;
+      this->dut_->clk = 0;
       this->dut_->eval();
       this->dump_();
     }
@@ -64,8 +66,9 @@ template <typename Model>
 class AsyncVerilatorWrapperTest : public VerilatorWrapperTestBase<Model>
 {
 protected:
-  void step_()
+  void tick_(const size_t cycles = 1) final override
   {
+    (void)cycles;
     this->dut_->eval();
     this->dump_();
   }
