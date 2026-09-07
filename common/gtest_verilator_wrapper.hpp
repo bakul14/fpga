@@ -15,7 +15,7 @@ template <typename Model>
 class VerilatorWrapperTestBase : public ::testing::Test
 {
 protected:
-  void SetUp() override
+  void SetUp() final
   {
     const std::string test_name = ::testing::UnitTest::GetInstance()->current_test_info()->name();
 
@@ -25,7 +25,7 @@ protected:
     reset_();
   }
 
-  void TearDown() override
+  void TearDown() final
   {
     dut_->final();
     trace_->close();
