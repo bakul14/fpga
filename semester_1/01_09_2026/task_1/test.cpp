@@ -7,7 +7,7 @@
 class ShaderTest : public SyncVerilatorWrapperTest<Vshader>
 {
 public:
-  void reset_() override
+  void reset_() final
   {
     dut_->clk          = 0;
     dut_->turn_request = 0;

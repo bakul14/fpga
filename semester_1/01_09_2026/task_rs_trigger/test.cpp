@@ -7,7 +7,7 @@
 class RSTriggerTest : public AsyncVerilatorWrapperTest<Vrs_trigger>
 {
 protected:
-  void reset_() override
+  void reset_() final
   {
     dut_->set   = 0;
     dut_->reset = 0;
