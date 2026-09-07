@@ -41,9 +41,19 @@ target_include_directories(${TASK} PRIVATE ${CMAKE_SOURCE_DIR}/common)
 
 target_link_libraries(${TASK} PRIVATE GTest::gtest_main)
 
+set(VERILATOR_COMMON_ARGS -Wall --x-assign unique --x-initial unique)
+
+add_custom_target(lint_${TASK} ALL
+    COMMAND ${VERILATOR_BIN} --lint-only ${VERILATOR_COMMON_ARGS} ${VERILOG_SOURCES}
+    COMMENT "Verilator lint: ${TASK}"
+    VERBATIM
+)
+
+add_dependencies(${TASK} lint_${TASK})
+
 verilate(${TASK}
     TRACE_VCD
-    VERILATOR_ARGS -Wall
+    VERILATOR_ARGS ${VERILATOR_COMMON_ARGS}
     SOURCES ${VERILOG_SOURCES}
 )
 
