@@ -36,29 +36,28 @@ TEST_F(ShaderTest, check_silence_when_not_ready)
 {
   dut_->turn_request = 1;
 
-  tick_();
-  while (!dut_->ready_to_be_turned) {
+  dut_->clk = 1;
+  step_();
+
+  EXPECT_EQ(dut_->ready_to_be_turned, 0);
+  EXPECT_EQ(dut_->out0, 1);
+  EXPECT_EQ(dut_->out1, 0);
+  EXPECT_EQ(dut_->out2, 0);
+
+  for (int i = 0; i < 5; i++) {
+    dut_->clk = 0;
+    step_();
+    dut_->clk = 1;
+    step_();
+
+    EXPECT_EQ(dut_->ready_to_be_turned, 0);
     EXPECT_EQ(dut_->out0, 1);
     EXPECT_EQ(dut_->out1, 0);
     EXPECT_EQ(dut_->out2, 0);
-    tick_();
   }
 
-  tick_();
-  while (!dut_->ready_to_be_turned) {
-    EXPECT_EQ(dut_->out0, 0);
-    EXPECT_EQ(dut_->out1, 1);
-    EXPECT_EQ(dut_->out2, 0);
-    tick_();
-  }
-
-  tick_();
-  while (!dut_->ready_to_be_turned) {
-    EXPECT_EQ(dut_->out0, 0);
-    EXPECT_EQ(dut_->out1, 0);
-    EXPECT_EQ(dut_->out2, 1);
-    tick_();
-  }
+  settle_();
+  EXPECT_EQ(dut_->ready_to_be_turned, 1);
 }
 
 TEST_F(ShaderTest, check_shading_when_requested)
@@ -67,21 +66,34 @@ TEST_F(ShaderTest, check_shading_when_requested)
 
   for (int i = 0; i < 3; i++) {
     tick_();
-    while (!dut_->ready_to_be_turned);
     EXPECT_EQ(dut_->out0, 1);
     EXPECT_EQ(dut_->out1, 0);
     EXPECT_EQ(dut_->out2, 0);
 
     tick_();
-    while (!dut_->ready_to_be_turned);
     EXPECT_EQ(dut_->out0, 0);
     EXPECT_EQ(dut_->out1, 1);
     EXPECT_EQ(dut_->out2, 0);
 
     tick_();
-    while (!dut_->ready_to_be_turned);
     EXPECT_EQ(dut_->out0, 0);
     EXPECT_EQ(dut_->out1, 0);
     EXPECT_EQ(dut_->out2, 1);
   }
+}
+
+TEST_F(ShaderTest, check_busy_window)
+{
+  dut_->turn_request = 1;
+
+  tick_();
+  EXPECT_EQ(dut_->ready_to_be_turned, 1);
+
+  dut_->clk = 1;
+
+  step_();
+  EXPECT_EQ(dut_->ready_to_be_turned, 0);
+
+  settle_();
+  EXPECT_EQ(dut_->ready_to_be_turned, 1);
 }

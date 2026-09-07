@@ -11,6 +11,8 @@
 
 constexpr int k_trace_levels = 1;
 
+constexpr size_t k_max_settle_iterations = 10'000U;
+
 template <typename Model>
 class VerilatorWrapperTestBase : public ::testing::Test
 {
@@ -31,7 +33,31 @@ protected:
     trace_->close();
   }
 
-  void dump_() { trace_->dump(sim_time_++); }
+  void dump_() { trace_->dump(context_->time()); }
+
+  void step_()
+  {
+    context_->timeInc(1);
+    dut_->eval();
+    dump_();
+  }
+
+  void settle_()
+  {
+    for (size_t i = 0U; !context_->gotFinish() && dut_->eventsPending(); ++i) {
+      if (i >= k_max_settle_iterations) {
+        ADD_FAILURE() << "settle_(): очередь событий не опустела за " << k_max_settle_iterations
+                      << " итераций";
+        break;
+      }
+
+      const uint64_t next_time = dut_->nextTimeSlot();
+      if (next_time > context_->time()) { context_->time(next_time); }
+
+      dut_->eval();
+      dump_();
+    }
+  }
 
   virtual void reset_() {}
 
@@ -41,7 +67,6 @@ protected:
   const std::unique_ptr<VerilatedContext> context_ = std::make_unique<VerilatedContext>();
   const std::unique_ptr<Model> dut_                = std::make_unique<Model>(context_.get());
   const std::unique_ptr<VerilatedVcdC> trace_      = std::make_unique<VerilatedVcdC>();
-  uint64_t sim_time_                               = 0U;
 };
 
 template <typename Model>
@@ -52,12 +77,12 @@ protected:
   {
     for (size_t i = 0; i < cycles; ++i) {
       this->dut_->clk = 1;
-      this->dut_->eval();
-      this->dump_();
+      this->step_();
+      this->settle_();
 
       this->dut_->clk = 0;
-      this->dut_->eval();
-      this->dump_();
+      this->step_();
+      this->settle_();
     }
   }
 };
@@ -69,7 +94,7 @@ protected:
   void tick_(const size_t cycles = 1) final
   {
     (void)cycles;
-    this->dut_->eval();
-    this->dump_();
+    this->step_();
+    this->settle_();
   }
 };
