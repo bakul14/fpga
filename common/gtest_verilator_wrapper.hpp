@@ -15,7 +15,7 @@ template <typename Model>
 class VerilatorWrapperTestBase : public ::testing::Test
 {
 protected:
-  void SetUp() override
+  void SetUp() final
   {
     const std::string test_name = ::testing::UnitTest::GetInstance()->current_test_info()->name();
 
@@ -25,7 +25,7 @@ protected:
     reset_();
   }
 
-  void TearDown() override
+  void TearDown() final
   {
     dut_->final();
     trace_->close();
@@ -34,6 +34,8 @@ protected:
   void dump_() { trace_->dump(sim_time_++); }
 
   virtual void reset_() {}
+
+  virtual void tick_(const size_t cycles = 1) = 0;
 
 protected:
   const std::unique_ptr<VerilatedContext> context_ = std::make_unique<VerilatedContext>();
@@ -46,14 +48,14 @@ template <typename Model>
 class SyncVerilatorWrapperTest : public VerilatorWrapperTestBase<Model>
 {
 protected:
-  void tick_(const size_t cycles = 1)
+  void tick_(const size_t cycles = 1) final
   {
     for (size_t i = 0; i < cycles; ++i) {
-      this->dut_->clk = 0;
+      this->dut_->clk = 1;
       this->dut_->eval();
       this->dump_();
 
-      this->dut_->clk = 1;
+      this->dut_->clk = 0;
       this->dut_->eval();
       this->dump_();
     }
@@ -64,8 +66,9 @@ template <typename Model>
 class AsyncVerilatorWrapperTest : public VerilatorWrapperTestBase<Model>
 {
 protected:
-  void step_()
+  void tick_(const size_t cycles = 1) final
   {
+    (void)cycles;
     this->dut_->eval();
     this->dump_();
   }

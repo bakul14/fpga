@@ -6,9 +6,6 @@
 #include "Vcounter.h"
 #include "gtest_verilator_wrapper.hpp"
 
-namespace
-{
-
 constexpr uint32_t k_width         = 4U;
 constexpr uint32_t k_max_count     = (1U << k_width) - 1U;
 constexpr uint32_t k_period        = k_max_count + 1U;
@@ -18,7 +15,7 @@ constexpr uint32_t k_reset_cycles  = 3U;
 class CounterTest : public SyncVerilatorWrapperTest<Vcounter>
 {
 protected:
-  void reset_() override
+  void reset_() final
   {
     dut_->rst = 1;
     tick_();
@@ -29,7 +26,9 @@ protected:
 };
 
 TEST_F(CounterTest, reset_clears_count)
-{ EXPECT_EQ(0U, count_()); }
+{
+  EXPECT_EQ(0U, count_());
+}
 
 TEST_F(CounterTest, increments_on_every_clock)
 {
@@ -82,5 +81,3 @@ TEST_F(CounterTest, reset_works_in_the_middle_of_counting)
   reset_();
   EXPECT_EQ(0U, count_());
 }
-
-}  // namespace
