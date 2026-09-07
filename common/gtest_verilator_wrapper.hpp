@@ -48,7 +48,7 @@ template <typename Model>
 class SyncVerilatorWrapperTest : public VerilatorWrapperTestBase<Model>
 {
 protected:
-  void tick_(const size_t cycles = 1) final override
+  void tick_(const size_t cycles = 1) final
   {
     for (size_t i = 0; i < cycles; ++i) {
       this->dut_->clk = 1;
@@ -66,7 +66,7 @@ template <typename Model>
 class AsyncVerilatorWrapperTest : public VerilatorWrapperTestBase<Model>
 {
 protected:
-  void tick_(const size_t cycles = 1) final override
+  void tick_(const size_t cycles = 1) final
   {
     (void)cycles;
     this->dut_->eval();
