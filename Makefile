@@ -1,7 +1,9 @@
 .PHONY: clean distclean
 
+TIMESCALE ?= 1ns/1ps
+
 %:
-	cmake -B build/$@ -DTASK=$@
+	cmake -B build/$@ -DTASK=$@ -DTIMESCALE=$(TIMESCALE)
 	cmake --build build/$@ -j$$(nproc)
 	cd build/$@ && ./$@
 

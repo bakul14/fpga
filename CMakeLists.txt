@@ -46,8 +46,13 @@ set(VERILATOR_COMMON_ARGS
     --x-assign unique
     --x-initial unique
     --timing
-    --timescale-override 1ns/1ps
 )
+
+if(TIMESCALE)
+    list(APPEND VERILATOR_COMMON_ARGS --timescale ${TIMESCALE})
+else()
+    message(FATAL_ERROR "TIMESCALE is not set, use flag -DTIMESCALE=1ns/1ps")
+endif()
 
 add_custom_target(lint_${TASK} ALL
     COMMAND ${VERILATOR_BIN} --lint-only ${VERILATOR_COMMON_ARGS} ${VERILOG_SOURCES}
