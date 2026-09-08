@@ -41,10 +41,22 @@ target_include_directories(${TASK} PRIVATE ${CMAKE_SOURCE_DIR}/common)
 
 target_link_libraries(${TASK} PRIVATE GTest::gtest_main)
 
-set(VERILATOR_COMMON_ARGS -Wall --x-assign unique --x-initial unique)
+set(VERILATOR_COMMON_ARGS
+    -Wall
+    --x-assign unique
+    --x-initial unique
+    --timing
+)
+
+if(TIMESCALE)
+    list(APPEND VERILATOR_COMMON_ARGS --timescale ${TIMESCALE})
+else()
+    message(FATAL_ERROR "TIMESCALE is not set, use flag -DTIMESCALE=1ns/1ps")
+endif()
 
 add_custom_target(lint_${TASK} ALL
-    COMMAND ${VERILATOR_BIN} --lint-only ${VERILATOR_COMMON_ARGS} ${VERILOG_SOURCES}
+    COMMAND ${VERILATOR_BIN} --lint-only
+      ${VERILATOR_COMMON_ARGS} ${VERILOG_SOURCES}
     COMMENT "Verilator lint: ${TASK}"
     VERBATIM
 )
