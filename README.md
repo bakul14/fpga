@@ -12,7 +12,7 @@ brew install verilator verible cmake clang-format coreutils
 
 ### На Linux (протестировано на Ubuntu 22.04)
 
-В убунте 22.04 в стандартном репозитории есть только старый `Verilator 4.*` и `g++ 11`, который не поддерживает C++23, поэтому Verilator собираем из исходников, а компилятор ставим из PPA.
+В убунте 22.04 в стандартном репозитории есть только старый `Verilator 4.*` и `g++ 11`, который не поддерживает C++23, поэтому Verilator посвежее собираем из исходников, а компилятор g++-15 ставим из PPA.
 
 ```bash
 sudo apt update -y
@@ -21,7 +21,7 @@ sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
 sudo apt update -y
 sudo apt install -y g++-15
 echo 'export CXX=g++-15' >> ~/.bashrc
-export CXX=g++-15
+source ~/.bashrc
 git clone https://github.com/verilator/verilator.git ~/.local/src/verilator
 cd ~/.local/src/verilator
 git checkout v5.050
