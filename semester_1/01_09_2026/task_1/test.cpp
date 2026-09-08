@@ -84,16 +84,19 @@ TEST_F(ShaderTest, check_shading_when_requested)
 
 TEST_F(ShaderTest, check_busy_window)
 {
-  dut_->turn_request = 1;
+  for (int i = 0; i < 10; ++i) {
+    dut_->turn_request = !(dut_->turn_request);
 
-  tick_();
-  EXPECT_EQ(dut_->ready_to_be_turned, 1);
+    for (int j = 0; j < 10; ++j) {
+      dut_->clk = 1;
+      step_();
+      EXPECT_NE(dut_->ready_to_be_turned, dut_->turn_request);
+      dut_->clk = 0;
+      step_();
+      EXPECT_NE(dut_->ready_to_be_turned, dut_->turn_request);
+    }
 
-  dut_->clk = 1;
-
-  step_();
-  EXPECT_EQ(dut_->ready_to_be_turned, 0);
-
-  settle_();
-  EXPECT_EQ(dut_->ready_to_be_turned, 1);
+    settle_();
+    EXPECT_EQ(dut_->ready_to_be_turned, 1);
+  }
 }

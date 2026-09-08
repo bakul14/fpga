@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ps / 1ps
 
 module shader (
     input       clk,
@@ -12,21 +12,14 @@ module shader (
   reg [1:0] state;
 
   initial ready_to_be_turned = 1'b1;
+  initial state = 2'd0;
 
   always @(posedge clk) begin
     if (turn_request && ready_to_be_turned) begin
+      state              <= (state >= 3) ? 2'd1 : state + 2'd1;
       ready_to_be_turned <= 1'b0;
       #30 ready_to_be_turned <= 1'b1;
     end
-  end
-
-  always @(posedge clk) begin
-
-    if (turn_request && ready_to_be_turned) begin
-      state <= state + 1;
-      if (state >= 3) state <= 1;
-    end
-
   end
 
   assign out0 = (state == 1);
