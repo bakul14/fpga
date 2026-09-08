@@ -26,7 +26,9 @@ module divide3_checker (
 
   always @(posedge clk) begin
     remainder <= remainder_new;
-    if (last) divisible <= (remainder_new == 0) ? 1 : 0;
+    if (last) begin
+      divisible <= (remainder_new == 0) ? 1 : 0;
+    end
   end
 
 endmodule
