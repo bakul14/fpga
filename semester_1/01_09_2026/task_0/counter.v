@@ -1,3 +1,5 @@
+`default_nettype none
+
 module counter #(
     parameter WIDTH = 4
 ) (

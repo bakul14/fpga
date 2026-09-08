@@ -1,3 +1,5 @@
+`default_nettype none
+
 module rs_trigger (
     input  wire set,
     input  wire reset,
