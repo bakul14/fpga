@@ -6,6 +6,7 @@
 
 #include <bit>
 #include <cstdint>
+#include <string>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -22,9 +23,13 @@ std::vector<std::pair<uint64_t, bool>> values = {
   {18446744073709551614UL, false},
   {18446744073709551615UL, true}};
 
-}
+const std::string value_name(const testing::TestParamInfo<std::pair<uint64_t, bool>> &info)
+{ return "value_" + std::to_string(info.param.first); }
 
-class Divide3CheckerTest : public SyncVerilatorWrapperTest<Vdivide3_checker>
+}  // namespace
+
+class Divide3CheckerTest : public SyncVerilatorWrapperTest<Vdivide3_checker>,
+                           public ::testing::WithParamInterface<std::pair<uint64_t, bool>>
 {
 protected:
   void reset_() final
@@ -51,10 +56,10 @@ protected:
   }
 };
 
-TEST_F(Divide3CheckerTest, check_all_numbers_in_vector)
+TEST_P(Divide3CheckerTest, check)
 {
-  for (const auto &val : values) {
-    send_motorola_value_(val.first);
-    EXPECT_EQ(dut_->divisible, val.second);
-  }
+  send_motorola_value_(GetParam().first);
+  EXPECT_EQ(dut_->divisible, GetParam().second);
 }
+
+INSTANTIATE_TEST_SUITE_P(divide3, Divide3CheckerTest, ::testing::ValuesIn(values), value_name);
