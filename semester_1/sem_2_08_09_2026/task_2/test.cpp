@@ -7,18 +7,22 @@
 #include <bit>
 #include <cstdint>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
-std::vector<std::pair<__uint128_t, bool>> values = {
-  {3ULL, true},
-  {4ULL, false},
-  {5ULL, false},
-  {6ULL, true},
-  {123456ULL, true},
-  {18446744073709551614ULL, false},
-  {18446744073709551615ULL, true},
-  /* {static_cast<__uint128_t>(340282366920938463463374607431768211455), true} */};  // для 128 не
-                                                                                     // компилируется
+namespace
+{
+
+std::vector<std::pair<uint64_t, bool>> values = {
+  {3UL, true},
+  {4UL, false},
+  {5UL, false},
+  {6UL, true},
+  {123456UL, true},
+  {18446744073709551614UL, false},
+  {18446744073709551615UL, true}};
+
+}
 
 class Divide3CheckerTest : public SyncVerilatorWrapperTest<Vdivide3_checker>
 {
