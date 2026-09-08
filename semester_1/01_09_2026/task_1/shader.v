@@ -32,9 +32,9 @@ module shader (
   assign out2 = (state == 3);
 
   initial begin
-    #10 $display("Задержка #10 прошла, t=%0t", $realtime);
+    #10 $display("Задержка #10 прошла, t = %0t", $realtime);
     wait (turn_request);
-    $display("Получен turn_request, t=%0t", $realtime);
+    $display("Получен turn_request, t = %0t", $realtime);
   end
 
 endmodule
