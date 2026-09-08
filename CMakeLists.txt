@@ -55,7 +55,8 @@ else()
 endif()
 
 add_custom_target(lint_${TASK} ALL
-    COMMAND ${VERILATOR_BIN} --lint-only ${VERILATOR_COMMON_ARGS} ${VERILOG_SOURCES}
+    COMMAND ${VERILATOR_BIN} --lint-only
+      ${VERILATOR_COMMON_ARGS} ${VERILOG_SOURCES}
     COMMENT "Verilator lint: ${TASK}"
     VERBATIM
 )
