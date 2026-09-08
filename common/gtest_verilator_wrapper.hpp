@@ -51,8 +51,8 @@ protected:
         break;
       }
 
-      const uint64_t next_time = dut_->nextTimeSlot();
-      if (next_time > context_->time()) { context_->time(next_time); }
+      const uint64_t next_precision_slot = dut_->nextTimeSlot();
+      if (next_precision_slot > context_->time()) { context_->time(next_precision_slot); }
 
       dut_->eval();
       dump_();
