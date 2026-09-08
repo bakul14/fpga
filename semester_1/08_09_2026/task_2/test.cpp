@@ -14,7 +14,7 @@
 namespace
 {
 
-std::vector<std::pair<uint64_t, bool>> values = {
+std::vector<std::pair<uint64_t, bool>> axioms = {
   {3UL, true},
   {4UL, false},
   {5UL, false},
@@ -44,7 +44,7 @@ protected:
   template <class T>
   void send_motorola_value_(const T value)
   {
-    const auto bits = static_cast<std::make_unsigned_t<T>>(value);
+    const T bits    = static_cast<std::make_unsigned_t<T>>(value);
     const int width = (bits == 0U) ? 1 : std::bit_width(bits);
 
     for (int i = width - 1; i >= 0; --i) {
@@ -62,4 +62,4 @@ TEST_P(Divide3CheckerTest, check)
   EXPECT_EQ(dut_->divisible, GetParam().second);
 }
 
-INSTANTIATE_TEST_SUITE_P(divide3, Divide3CheckerTest, ::testing::ValuesIn(values), value_name);
+INSTANTIATE_TEST_SUITE_P(divide3, Divide3CheckerTest, ::testing::ValuesIn(axioms), value_name);
