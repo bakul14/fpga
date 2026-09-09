@@ -5,9 +5,9 @@
 #include "Vdivide3_checker.h"
 
 #include <bit>
+#include <concepts>
 #include <cstdint>
 #include <string>
-#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -41,10 +41,9 @@ protected:
     dut_->eval();
   }
 
-  template <class T>
-  void send_motorola_value_(const T value)
+  template <std::unsigned_integral T>
+  void send_motorola_value_(const T bits)
   {
-    const T bits    = static_cast<std::make_unsigned_t<T>>(value);
     const int width = (bits == 0U) ? 1 : std::bit_width(bits);
 
     for (int i = width - 1; i >= 0; --i) {
