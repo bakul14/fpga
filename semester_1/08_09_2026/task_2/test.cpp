@@ -14,14 +14,14 @@
 namespace
 {
 
-std::vector<std::pair<uint64_t, bool>> axioms = {
-  {3UL, true},
-  {4UL, false},
-  {5UL, false},
-  {6UL, true},
-  {123456UL, true},
-  {18446744073709551614UL, false},
-  {18446744073709551615UL, true}};
+const std::vector<std::pair<uint64_t, bool>> axioms = {
+  {3ULL, true},
+  {4ULL, false},
+  {5ULL, false},
+  {6ULL, true},
+  {123456ULL, true},
+  {18446744073709551614ULL, false},
+  {18446744073709551615ULL, true}};
 
 const std::string value_name(const testing::TestParamInfo<std::pair<uint64_t, bool>> &info)
 { return "value_" + std::to_string(info.param.first); }
