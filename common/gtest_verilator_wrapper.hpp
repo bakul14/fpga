@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -19,7 +20,9 @@ class VerilatorWrapperTestBase : public ::testing::Test
 protected:
   void SetUp() final
   {
-    const std::string test_name = ::testing::UnitTest::GetInstance()->current_test_info()->name();
+    std::string test_name = ::testing::UnitTest::GetInstance()->current_test_info()->name();
+
+    std::replace(test_name.begin(), test_name.end(), '/', '_');
 
     context_->traceEverOn(true);
     dut_->trace(trace_.get(), k_trace_levels);
