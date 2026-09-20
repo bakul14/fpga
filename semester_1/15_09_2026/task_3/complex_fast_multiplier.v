@@ -13,7 +13,10 @@ module complex_fast_multiplier (
 
   reg [1:0] stage = STAGE_P1;
 
-  reg signed [63:0] P1, P2, P3;
+  reg signed [63:0] x, y, m;
+
+  reg signed [63:0] P1, P2;
+  wire signed [63:0] P3 = m;
 
   assign Re_out = P1 - P2;
   assign Im_out = P3 - P2 - P1;
@@ -37,14 +40,11 @@ module complex_fast_multiplier (
 
   task step_multiply;
     case (stage)
-      STAGE_P1: begin
-        P1 <= a_in * c_in;
-      end
       STAGE_P2: begin
-        P2 <= bi_in * di_in;
+        P1 <= m;
       end
       STAGE_P3: begin
-        P3 <= (64'(a_in) + 64'(bi_in)) * (64'(c_in) + 64'(di_in));
+        P2 <= m;
       end
       default: begin
       end
@@ -60,8 +60,29 @@ module complex_fast_multiplier (
 
   endtask
 
+  always @* begin
+    case (stage)
+      STAGE_P1: begin
+        x = 64'(a_in);
+        y = 64'(c_in);
+      end
+      STAGE_P2: begin
+        x = 64'(bi_in);
+        y = 64'(di_in);
+      end
+      STAGE_P3: begin
+        x = 64'(a_in) + 64'(bi_in);
+        y = 64'(c_in) + 64'(di_in);
+      end
+      default: begin
+
+      end
+    endcase
+  end
+
   always @(posedge clk) begin
     update_stage();
+    m <= x * y;
     step_multiply();
     update_output();
   end
