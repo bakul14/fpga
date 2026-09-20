@@ -21,7 +21,7 @@ module complex_fast_multiplier (
   assign Re_out = P1 - P2;
   assign Im_out = P3 - P2 - P1;
 
-  task update_stage;
+  task sync_update_stage;
     case (stage)
       STAGE_P1: begin
         stage <= STAGE_P2;
@@ -38,7 +38,8 @@ module complex_fast_multiplier (
     endcase
   endtask
 
-  task step_multiply;
+  task sync_step_multiply;
+    m <= x * y;
     case (stage)
       STAGE_P2: begin
         P1 <= m;
@@ -51,15 +52,15 @@ module complex_fast_multiplier (
     endcase
   endtask
 
-  task update_output;
+  task sync_update_valid_signal;
     if (STAGE_P3 == stage) begin
       valid_out <= 1'b1;
     end else begin
       valid_out <= 1'b0;
     end
-
   endtask
 
+  // Static multiplexer
   always @* begin
     case (stage)
       STAGE_P1: begin
@@ -81,10 +82,9 @@ module complex_fast_multiplier (
   end
 
   always @(posedge clk) begin
-    update_stage();
-    m <= x * y;
-    step_multiply();
-    update_output();
+    sync_update_stage();
+    sync_step_multiply();
+    sync_update_valid_signal();
   end
 
 endmodule
