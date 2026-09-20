@@ -14,12 +14,31 @@ module complex_fast_multiplier (
   reg [1:0] stage = STAGE_P1;
 
   reg signed [63:0] x, y, m;
-
   reg signed [63:0] P1, P2;
   wire signed [63:0] P3 = m;
 
   assign Re_out = P1 - P2;
   assign Im_out = P3 - P2 - P1;
+
+  // Static multiplexer
+  always @* begin
+    case (stage)
+      STAGE_P1: begin
+        x = 64'(a_in);
+        y = 64'(c_in);
+      end
+      STAGE_P2: begin
+        x = 64'(bi_in);
+        y = 64'(di_in);
+      end
+      STAGE_P3: begin
+        x = 64'(a_in) + 64'(bi_in);
+        y = 64'(c_in) + 64'(di_in);
+      end
+      default: begin
+      end
+    endcase
+  end
 
   task sync_update_stage;
     case (stage)
@@ -59,27 +78,6 @@ module complex_fast_multiplier (
       valid_out <= 1'b0;
     end
   endtask
-
-  // Static multiplexer
-  always @* begin
-    case (stage)
-      STAGE_P1: begin
-        x = 64'(a_in);
-        y = 64'(c_in);
-      end
-      STAGE_P2: begin
-        x = 64'(bi_in);
-        y = 64'(di_in);
-      end
-      STAGE_P3: begin
-        x = 64'(a_in) + 64'(bi_in);
-        y = 64'(c_in) + 64'(di_in);
-      end
-      default: begin
-
-      end
-    endcase
-  end
 
   always @(posedge clk) begin
     sync_update_stage();
