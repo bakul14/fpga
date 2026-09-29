@@ -2,8 +2,10 @@
 
 TIMESCALE ?= 1ns/1ps
 
+task_4: TOP = iir_filter
+
 %:
-	cmake -B build/$@ -DTASK=$@ -DTIMESCALE=$(TIMESCALE)
+	cmake -B build/$@ -DTASK=$@ -DTIMESCALE=$(TIMESCALE) -DTOP=$(TOP)
 	cmake --build build/$@ -j$$(nproc)
 	cd build/$@ && ./$@
 

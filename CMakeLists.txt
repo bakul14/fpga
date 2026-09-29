@@ -35,6 +35,11 @@ FetchContent_MakeAvailable(googletest)
 file(GLOB_RECURSE CPP_SOURCES ${TASK_DIR}/*.cpp)
 file(GLOB_RECURSE VERILOG_SOURCES ${TASK_DIR}/*.v)
 
+if(NOT TOP)
+  list(GET VERILOG_SOURCES 0 TOP_SOURCE)
+  get_filename_component(TOP ${TOP_SOURCE} NAME_WE)
+endif()
+
 add_executable(${TASK} ${CPP_SOURCES})
 
 target_include_directories(${TASK} PRIVATE ${CMAKE_SOURCE_DIR}/common)
@@ -55,7 +60,7 @@ else()
 endif()
 
 add_custom_target(lint_${TASK} ALL
-    COMMAND ${VERILATOR_BIN} --lint-only
+    COMMAND ${VERILATOR_BIN} --lint-only --top-module ${TOP}
       ${VERILATOR_COMMON_ARGS} ${VERILOG_SOURCES}
     COMMENT "Verilator lint: ${TASK}"
     VERBATIM
@@ -65,6 +70,8 @@ add_dependencies(${TASK} lint_${TASK})
 
 verilate(${TASK}
     TRACE_VCD
+    PREFIX V${TOP}
+    TOP_MODULE ${TOP}
     VERILATOR_ARGS ${VERILATOR_COMMON_ARGS}
     SOURCES ${VERILOG_SOURCES}
 )
