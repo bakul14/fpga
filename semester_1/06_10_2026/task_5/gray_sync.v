@@ -1,6 +1,6 @@
 `default_nettype none
 
-module gray_code_synchronizer #(
+module gray_sync #(
     parameter WIDTH = 5
 ) (
     input  wire             src_clk,

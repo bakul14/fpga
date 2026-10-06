@@ -33,7 +33,7 @@ module async_fifo #(
     valid_out = 0;
   end
 
-  gray_code_synchronizer #(
+  gray_sync #(
       .WIDTH(PTR_WIDTH)
   ) rd_ptr_to_wr_clk (
       .src_clk   (rd_clk),
@@ -42,7 +42,7 @@ module async_fifo #(
       .binary_out(rd_ptr_in_wr_clk)
   );
 
-  gray_code_synchronizer #(
+  gray_sync #(
       .WIDTH(PTR_WIDTH)
   ) wr_ptr_to_rd_clk (
       .src_clk   (wr_clk),
