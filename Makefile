@@ -3,6 +3,7 @@
 TIMESCALE ?= 1ns/1ps
 
 task_4: TOP = iir_filter
+task_5: TOP = async_fifo
 
 %:
 	cmake -B build/$@ -DTASK=$@ -DTIMESCALE=$(TIMESCALE) -DTOP=$(TOP)
