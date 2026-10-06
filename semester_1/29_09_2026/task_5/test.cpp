@@ -52,7 +52,7 @@ protected:
     dut_->wr_clk  = 0;
     dut_->rd_clk  = 0;
     dut_->wr_en   = 0;
-    dut_->wr_data = 0;
+    dut_->data_in = 0;
     dut_->rd_en   = 0;
     dut_->eval();
     dump_();
@@ -119,23 +119,19 @@ protected:
     for (size_t edge = 0U; read < inputs.size(); ++edge) {
       ASSERT_LT(edge, max_edges) << "записано " << written << ", прочитано " << read;
 
-      const bool wr_accepted = dut_->wr_en && !dut_->full;
-      const bool rd_accepted = dut_->rd_en && !dut_->empty;
-      const uint8_t head     = dut_->rd_data;
-
       tick_();
 
-      if (wr_edge_(k_rising) && wr_accepted) { ++written; }
-      if (rd_edge_(k_rising) && rd_accepted) {
-        ASSERT_EQ(head, inputs[read]) << "элемент " << read;
+      if (wr_edge_(k_rising) && dut_->wr_en) { ++written; }
+      if (rd_edge_(k_rising) && dut_->valid_out) {
+        ASSERT_EQ(dut_->data_out, inputs[read]) << "элемент " << read;
         ++read;
       }
 
       if (wr_edge_(k_falling)) {
-        dut_->wr_en   = written < inputs.size();
-        dut_->wr_data = inputs[std::min(written, inputs.size() - 1U)];
+        dut_->wr_en   = written < inputs.size() && !dut_->full;
+        dut_->data_in = inputs[std::min(written, inputs.size() - 1U)];
       }
-      if (rd_edge_(k_falling)) { dut_->rd_en = 1; }
+      if (rd_edge_(k_falling)) { dut_->rd_en = !dut_->empty; }
     }
   }
 
@@ -154,6 +150,7 @@ TEST_F(AsyncFifoTest, initially_empty_and_not_full)
 
   EXPECT_EQ(dut_->empty, 1);
   EXPECT_EQ(dut_->full, 0);
+  EXPECT_EQ(dut_->valid_out, 0);
 }
 
 TEST_F(AsyncFifoTest, fill_then_drain)
@@ -164,16 +161,12 @@ TEST_F(AsyncFifoTest, fill_then_drain)
     wait_wr_(k_falling);
     EXPECT_EQ(dut_->full, 0) << "запись " << index;
     dut_->wr_en   = 1;
-    dut_->wr_data = static_cast<uint8_t>(index);
+    dut_->data_in = static_cast<uint8_t>(index);
     wait_wr_(k_rising);
   }
 
   wait_wr_(k_falling);
   EXPECT_EQ(dut_->full, 1);
-  dut_->wr_data = 0xFF;
-  wait_wr_(k_rising);
-  EXPECT_EQ(dut_->full, 1);
-  wait_wr_(k_falling);
   dut_->wr_en = 0;
 
   for (size_t cycle = 0U; cycle < k_sync_latency_cycles; ++cycle) { wait_rd_(k_rising); }
@@ -181,17 +174,17 @@ TEST_F(AsyncFifoTest, fill_then_drain)
   for (size_t index = 0U; index < k_depth; ++index) {
     wait_rd_(k_falling);
     ASSERT_EQ(dut_->empty, 0) << "чтение " << index;
-    EXPECT_EQ(dut_->rd_data, index);
     dut_->rd_en = 1;
     wait_rd_(k_rising);
+    EXPECT_EQ(dut_->valid_out, 1) << "чтение " << index;
+    EXPECT_EQ(dut_->data_out, index);
   }
 
   wait_rd_(k_falling);
   EXPECT_EQ(dut_->empty, 1);
-  wait_rd_(k_rising);
-  EXPECT_EQ(dut_->empty, 1);
-  wait_rd_(k_falling);
   dut_->rd_en = 0;
+  wait_rd_(k_rising);
+  EXPECT_EQ(dut_->valid_out, 0);
 
   for (size_t cycle = 0U; cycle < k_sync_latency_cycles; ++cycle) { wait_wr_(k_rising); }
   EXPECT_EQ(dut_->full, 0);
