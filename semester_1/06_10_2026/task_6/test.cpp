@@ -18,7 +18,20 @@ protected:
     this->dut_->rst = 0;
   }
 
-  void tick_(const size_t cycles = 1) final override {}
+  void tick_(const size_t cycles = 1) final override
+  {
+    for (size_t i = 0; i < cycles; ++i) {
+      this->dut_->rd_clk = 1;
+      this->dut_->wr_clk = 1;
+      this->step_();
+      this->settle_();
+
+      this->dut_->rd_clk = 0;
+      this->dut_->wr_clk = 0;
+      this->step_();
+      this->settle_();
+    }
+  }
 
   void write_(const uint32_t data)
   {
@@ -30,6 +43,7 @@ protected:
     this->dut_->wr_clk = 0;
     this->step_();
     this->settle_();
+    this->dut_->wr_en = 0;
   }
 
   uint32_t read_()
@@ -41,6 +55,7 @@ protected:
     this->dut_->rd_clk = 0;
     this->step_();
     this->settle_();
+    this->dut_->rd_en = 0;
 
     return this->dut_->rd_data;
   }
@@ -60,6 +75,7 @@ TEST_F(AsyncFifoTest, check_full_memory)
 {
   for (uint32_t i = 0U; i < 255U; ++i) {
     write_(i);
+    tick_(3);
     EXPECT_EQ(read_(), i);
   }
 }
