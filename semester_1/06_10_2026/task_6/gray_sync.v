@@ -1,7 +1,7 @@
 `default_nettype none
 
 module gray_sync #(
-    parameter WIDTH = 5
+    parameter int WIDTH
 ) (
     input  wire             src_clk,
     input  wire [WIDTH-1:0] binary_in,
