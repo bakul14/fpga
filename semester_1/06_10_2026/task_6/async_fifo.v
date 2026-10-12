@@ -19,7 +19,7 @@ module async_fifo #(
   reg [     31:0] wr_ptr;
   reg [     31:0] rd_ptr;
 
-  assign full  = wr_ptr == 255;
+  assign full  = wr_ptr == (DEPTH-1);
   assign empty = (wr_ptr == 0);
 
   always @(posedge wr_clk or posedge rst) begin
