@@ -15,12 +15,33 @@ module async_fifo #(
     input wire rst
 );
 
-  reg [WIDTH-1:0] mem    [DEPTH-1:0];
-  reg [     31:0] wr_ptr;
-  reg [     31:0] rd_ptr;
+  reg  [WIDTH-1:0] mem                 [DEPTH-1:0];
+  reg  [     31:0] wr_ptr;
+  reg  [     31:0] rd_ptr;
 
-  assign full  = wr_ptr == (DEPTH-1);
-  assign empty = (wr_ptr == 0);
+  wire [     31:0] rd_ptr_in_wr_domain;
+  wire [     31:0] wr_ptr_in_rd_domain;
+
+  gray_sync #(
+      .WIDTH(WIDTH)
+  ) wr_ptr_to_rd_domain (
+      .src_clk   (wr_clk),
+      .binary_in (wr_ptr),
+      .dst_clk   (rd_clk),
+      .binary_out(wr_ptr_in_rd_domain)
+  );
+
+  gray_sync #(
+      .WIDTH(WIDTH)
+  ) rd_ptr_to_wr_domain (
+      .src_clk   (rd_clk),
+      .binary_in (rd_ptr),
+      .dst_clk   (wr_clk),
+      .binary_out(rd_ptr_in_wr_domain)
+  );
+
+  assign full  = (wr_ptr - rd_ptr_in_wr_domain) == DEPTH;
+  assign empty = (wr_ptr_in_rd_domain == rd_ptr);
 
   always @(posedge wr_clk or posedge rst) begin
     if (rst) begin
