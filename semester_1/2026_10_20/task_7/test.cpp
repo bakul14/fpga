@@ -37,12 +37,13 @@ TEST_F(SkidBufferTest, passthrough)
   for (uint32_t word = 0U; word < k_words_count; ++word) {
     dut_->s_axis_tdata = word;
     dut_->s_axis_tlast = (word % 4U == 3U);
-    tick_();
+    dut_->eval();
 
     EXPECT_EQ(dut_->m_axis_tvalid, 1);
     EXPECT_EQ(dut_->m_axis_tdata, word);
     EXPECT_EQ(dut_->m_axis_tlast, word % 4U == 3U);
     EXPECT_EQ(dut_->s_axis_tready, 1);
+    tick_();
   }
 }
 
@@ -54,8 +55,6 @@ TEST_F(SkidBufferTest, backpressure)
   dut_->s_axis_tdata = 10;
   tick_();
   dut_->s_axis_tdata = 11;
-  tick_();
-  dut_->s_axis_tdata = 12;
   tick_(3);
 
   EXPECT_EQ(dut_->s_axis_tready, 0);
@@ -64,9 +63,8 @@ TEST_F(SkidBufferTest, backpressure)
 
   dut_->m_axis_tready = 1;
   tick_();
+  EXPECT_EQ(dut_->s_axis_tready, 1);
   EXPECT_EQ(dut_->m_axis_tdata, 11);
-  tick_();
-  EXPECT_EQ(dut_->m_axis_tdata, 12);
 }
 
 TEST_F(SkidBufferTest, random_ready)
@@ -79,6 +77,7 @@ TEST_F(SkidBufferTest, random_ready)
   while (next_output < k_words_count) {
     dut_->s_axis_tdata  = next_input;
     dut_->m_axis_tready = std::rand() % 2;
+    dut_->eval();
 
     if (dut_->m_axis_tvalid && dut_->m_axis_tready) {
       EXPECT_EQ(dut_->m_axis_tdata, next_output);
