@@ -1,6 +1,6 @@
 ## Установка зависимостей
 
-### На Mac OS (протестировано на Mac OS 27 beta 6)
+### На Mac OS (протестировано на Mac OS 27)
 
 ```zsh
 xcode-select --install
@@ -10,7 +10,7 @@ brew install --HEAD randomplum/gtkwave/gtkwave
 brew install verilator verible cmake clang-format coreutils
 ```
 
-### На Linux (протестировано на Ubuntu 22.04)
+### На Linux (протестировано на Ubuntu 22.04, 26.04)
 
 В убунте 22.04 в стандартном репозитории есть только старый `Verilator 4.*` и `g++ 11`, который не поддерживает C++23, поэтому Verilator посвежее собираем из исходников, а компилятор g++-15 ставим из PPA.
 
@@ -66,10 +66,4 @@ make task_1
 make view
 ```
 
-Если не нравится `gtkview` из-за слишком мелкого интерфейса, то в VS Code можно установить расширение **WaveTrace** для просмотра `.vcd`-файлов и использовать его вместо `gtkview`.
-
-Отдельно и только на Mac OS можно установить `surfer` для просмотра `.vcd`-файлов (самый удобный кмк):
-
-```bash
-brew install surfer
-```
+Если не нравится `gtkview` из-за слишком мелкого интерфейса, то в VS Code можно установить расширение **WaveTrace** или **surfer** для просмотра `.vcd`-файлов и использовать его вместо `gtkview`.
